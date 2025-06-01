@@ -5,6 +5,10 @@ import path from 'path';
 import connectDB from './config/db';
 import { errorHandler, notFound } from './middleware';
 import userRoutes from './routes/userRoutes';
+import projectRoutes from './routes/projectRoutes';
+import estimateRoutes from './routes/estimateRoutes';
+import scheduleRoutes from './routes/scheduleRoutes';
+import statusRoutes from './routes/statusRoutes';
 
 // Загрузка переменных окружения
 dotenv.config();
@@ -30,8 +34,11 @@ app.get('/', (req: Request, res: Response) => {
 
 // Маршруты API
 app.use('/api/users', userRoutes);
-// TODO: Добавить остальные маршруты
-// app.use('/api/projects', projectRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api', estimateRoutes);
+app.use('/api', scheduleRoutes);
+app.use('/api', statusRoutes);
+// TODO: Добавить остальные маршруты (прайс-листы и т.д.)
 // app.use('/api/estimates', estimateRoutes);
 // app.use('/api/schedules', scheduleRoutes);
 // app.use('/api/status', statusRoutes);

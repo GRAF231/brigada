@@ -4,7 +4,8 @@ import {
   registerUser,
   getUserProfile,
   updateUserProfile,
-  getUsers
+  getUsers,
+  searchUsersByRole
 } from '../controllers/userController';
 import { protect, authorize } from '../middleware';
 import { UserRole } from '../models';
@@ -21,5 +22,8 @@ router.put('/profile', protect, updateUserProfile);
 
 // Маршруты только для менеджеров (НеБригадиров)
 router.get('/', protect, authorize(UserRole.MANAGER), getUsers);
+
+// Маршрут для поиска пользователей по роли
+router.get('/search', protect, searchUsersByRole);
 
 export default router;

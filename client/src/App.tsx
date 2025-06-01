@@ -14,6 +14,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
+import ProjectDetailsPage from './pages/ProjectDetailsPage';
+import CreateProjectPage from './pages/CreateProjectPage';
 
 // Создаем тему
 const theme = createTheme({
@@ -50,11 +52,9 @@ const App: React.FC = () => {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/profile" element={<ProfilePage />} />
-              {/* Здесь будут добавлены другие защищенные маршруты */}
-              {/* <Route path="/projects/:id" element={<ProjectDetailsPage />} /> */}
-              {/* <Route path="/projects/:id/estimate" element={<EstimatePage />} /> */}
-              {/* <Route path="/projects/:id/schedule" element={<SchedulePage />} /> */}
-              {/* <Route path="/projects/:id/status" element={<StatusPage />} /> */}
+              {/* Защищенные маршруты для проектов */}
+              <Route path="/projects/new" element={<CreateProjectPage />} />
+              <Route path="/projects/:id" element={<ProjectDetailsPage />} />
             </Route>
 
             {/* Маршруты только для менеджеров (НеБригадиров) */}

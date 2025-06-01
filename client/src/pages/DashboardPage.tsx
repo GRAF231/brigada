@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../app/store';
+import { useAppSelector, useAppDispatch } from '../app/store';
+import { getProjects, clearProjectError } from '../features/projects/projectSlice';
 import {
   Container,
   Typography,
@@ -11,45 +12,22 @@ import {
   CardContent,
   CardActions,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-// Временные данные для демонстрации
-const mockProjects = [
-  {
-    id: '1',
-    name: 'Ремонт квартиры на ул. Шейнкмана',
-    address: 'ул. Шейнкмана 4, 93',
-    status: 'in_progress',
-    startDate: '2025-04-10',
-    endDate: '2025-05-30'
-  },
-  {
-    id: '2',
-    name: 'Ремонт ванной комнаты',
-    address: 'ул. Ленина 25, 12',
-    status: 'planning',
-    startDate: '2025-06-01',
-    endDate: '2025-06-15'
-  }
-];
-
 const DashboardPage: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-  const [projects, setProjects] = useState(mockProjects);
-  
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  
   const { user } = useAppSelector((state) => state.auth);
+  const { projects, isLoading, error } = useAppSelector((state) => state.projects);
 
-  // В реальном приложении здесь будет запрос к API для получения проектов
+  // Загрузка проектов при монтировании компонента
   useEffect(() => {
-    // Имитация загрузки данных
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+    dispatch(getProjects());
+  }, [dispatch]);
 
   // Функция для отображения статуса проекта на русском языке
   const getStatusText = (status: string) => {
@@ -93,7 +71,17 @@ const DashboardPage: React.FC = () => {
         )}
       </Box>
 
-      {loading ? (
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ mb: 2 }}
+          onClose={() => dispatch(clearProjectError())}
+        >
+          {error}
+        </Alert>
+      )}
+      
+      {isLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <CircularProgress />
         </Box>
@@ -120,7 +108,7 @@ const DashboardPage: React.FC = () => {
           ) : (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
               {projects.map((project) => (
-                <Box key={project.id} sx={{ width: { xs: '100%', md: 'calc(50% - 12px)' } }}>
+                <Box key={project._id} sx={{ width: { xs: '100%', md: 'calc(50% - 12px)' } }}>
                   <Card>
                     <CardContent>
                       <Typography variant="h6" component="div">
@@ -152,25 +140,25 @@ const DashboardPage: React.FC = () => {
                     <CardActions>
                       <Button
                         size="small"
-                        onClick={() => navigate(`/projects/${project.id}`)}
+                        onClick={() => navigate(`/projects/${project._id}`)}
                       >
                         Подробнее
                       </Button>
                       <Button
                         size="small"
-                        onClick={() => navigate(`/projects/${project.id}/estimate`)}
+                        onClick={() => navigate(`/projects/${project._id}/estimate`)}
                       >
                         Смета
                       </Button>
                       <Button
                         size="small"
-                        onClick={() => navigate(`/projects/${project.id}/schedule`)}
+                        onClick={() => navigate(`/projects/${project._id}/schedule`)}
                       >
                         График
                       </Button>
                       <Button
                         size="small"
-                        onClick={() => navigate(`/projects/${project.id}/status`)}
+                        onClick={() => navigate(`/projects/${project._id}/status`)}
                       >
                         Статус
                       </Button>

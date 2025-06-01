@@ -3,8 +3,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 // Импортируем редьюсеры
 import authReducer from '../features/auth/authSlice';
+import projectReducer from '../features/projects/projectSlice';
 // Остальные редьюсеры будут добавлены позже
-// import projectReducer from '../features/projects/projectSlice';
 // import estimateReducer from '../features/estimates/estimateSlice';
 // import scheduleReducer from '../features/schedules/scheduleSlice';
 // import statusReducer from '../features/status/statusSlice';
@@ -12,7 +12,7 @@ import authReducer from '../features/auth/authSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    // projects: projectReducer,
+    projects: projectReducer,
     // estimates: estimateReducer,
     // schedules: scheduleReducer,
     // status: statusReducer,

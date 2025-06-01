@@ -166,6 +166,39 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 };
 
 /**
+ * @desc    Поиск пользователей по роли
+ * @route   GET /api/users/search
+ * @access  Private
+ */
+export const searchUsersByRole = async (req: Request, res: Response) => {
+  try {
+    const { role } = req.query;
+    
+    // Проверяем, указана ли роль
+    if (!role) {
+      res.status(400).json({ message: 'Необходимо указать роль для поиска' });
+      return;
+    }
+    
+    // Проверяем валидность роли
+    if (role && !Object.values(UserRole).includes(role as UserRole)) {
+      res.status(400).json({ message: 'Недопустимая роль пользователя' });
+      return;
+    }
+    
+    // Ищем пользователей по роли
+    const users = await User.find({ role }).select('-password');
+    
+    res.json(users);
+  } catch (error) {
+    res.status(500);
+    res.json({
+      message: error instanceof Error ? error.message : 'Произошла ошибка при поиске пользователей',
+    });
+  }
+};
+
+/**
  * @desc    Получение всех пользователей
  * @route   GET /api/users
  * @access  Private/Manager
